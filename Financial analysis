@@ -1,0 +1,19 @@
+# 数据获取
+import tushare as ts
+
+df = ts.get_hist_data('000875')
+
+## 数据清洗: 这里直接获取的是网站数据，所以不需要去重或者
+    # 将数据按照date字段排序
+    # 重置数据集的index为排序好的date字段
+    # 删除date字段
+    # 获取有效的数据集，即从open字段到p_change 其他字段不需要
+
+df = df.sort_index()
+df = df.iloc[:,0:6]
+
+cond = (df['close'] - df['open'])/df['open'] > 0.03
+df[cond].index
+
+cond = (df['open'] - df['close'].shift(1))/df['close'] < 0.02
+df[cond]
